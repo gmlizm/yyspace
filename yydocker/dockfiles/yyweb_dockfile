@@ -1,0 +1,17 @@
+### Dockerfile for yyweb
+
+FROM tomcat:latest
+LABEL version="1.0" author="lizm" description="dockerfile for yyweb"
+
+# define ipharmHome
+ARG IPHARM_HOME
+ENV IPHARM_HOME /yyspace
+
+# delete tomcat demos
+RUN rm -rf ${CATALINA_HOME}/webapps/*
+RUN mkdir -p ${IPHARM_HOME}
+
+# volume apps
+VOLUME ["${IPHARM_HOME}/apps", "${IPHARM_HOME}/logs"]
+
+

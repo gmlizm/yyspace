@@ -1,0 +1,25 @@
+### Dockerfile for yyjdk
+
+FROM centos:latest
+LABEL version="1.0" author="lizm" description="dockerfile for yyjdk image"
+
+ARG JDK_NAME=jdk-8u151.tar.gz
+ARG IPHARM_HOME=/yyspace
+ENV IPHARM_HOME /yyspace
+
+RUN yum install -y net-tools
+
+# config jdk
+COPY ${JDK_NAME} /opt
+RUN tar -xzf /opt/${JDK_NAME} -C /opt 
+ENV JAVA_HOME=/opt/jdk1.8.0_151 JRE_HOME=$JAVA_HOME/jre
+ENV PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+
+#config language
+#RUN yum groupinstall -y fonts
+ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+VOLUME ["${IPHARM_HOME}/apps", "${IPHARM_HOME}/logs"]
+
+EXPOSE 20880
+

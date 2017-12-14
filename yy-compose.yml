@@ -1,0 +1,296 @@
+### yyspace docker-compose for services
+version: "3.2"
+
+services:
+######################################################
+### app container
+######################################################
+  medweb:
+    image: yytomcat:latest
+    container_name: ${medweb_name}
+    hostname: ${medweb_name}
+    environment:
+      DUBBO_PROTOCOL_PORT: ${medweb_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${medweb_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+      - type: bind
+        source: ./yydocker/conf/tomcat/setenv.sh
+        target: /usr/local/tomcat/bin/setenv.sh
+      - type: bind
+        source: ./yydocker/conf/tomcat/server-medweb.xml
+        target: /usr/local/tomcat/conf/server.xml
+      - type: bind
+        source: ./apps/med/med.war
+        target: /usr/local/tomcat/webapps/med.war
+
+  medall:
+    image: yyjdk:latest
+    command: /yyspace/apps/med/bin/server.sh start all
+    container_name: ${medall_name}
+    hostname: ${medall_name}
+    depends_on:
+      - syscenter
+    environment:
+      DUBBO_PROTOCOL_PORT: ${medall_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${medall_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+
+  baseweb:
+    image: yytomcat:latest
+    container_name: ${baseweb_name}
+    hostname: ${baseweb_name}
+    depends_on:
+      - baseknow
+    environment:
+      DUBBO_PROTOCOL_PORT: ${baseweb_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${baseweb_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+      - type: bind
+        source: ./yydocker/conf/tomcat/setenv.sh
+        target: /usr/local/tomcat/bin/setenv.sh
+      - type: bind
+        source: ./yydocker/conf/tomcat/server-baseweb.xml
+        target: /usr/local/tomcat/conf/server.xml
+      - type: bind
+        source: ./apps/base/ROOT.war
+        target: /usr/local/tomcat/webapps/ROOT.war
+
+  baseengine:
+    image: yyjdk:latest
+    command: /yyspace/apps/engine/start.sh
+    container_name: ${baseengine_name}
+    hostname: ${baseengine_name}
+    depends_on:
+      - syscenter
+      - baseknow
+    environment:
+      DUBBO_PROTOCOL_PORT: ${baseengine_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${baseengine_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+
+
+  baseknow:
+    image: yyjdk:latest
+    command: /yyspace/apps/base/server_base.sh
+    container_name: ${baseknow_name}
+    hostname: ${baseknow_name}
+    depends_on:
+      - syscenter
+    environment:
+      DUBBO_PROTOCOL_PORT: ${baseknow_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${baseknow_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+
+  sysweb:
+    #build:
+    #  context: ./yydocker/dockfiles
+    #  dockerfile: yyweb_dockfile
+    image: yytomcat:latest
+    container_name: ${sysweb_name}
+    hostname: ${sysweb_name}
+    depends_on:
+      - syscenter
+    environment:
+      DUBBO_PROTOCOL_PORT: ${sysweb_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${sysweb_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+      - type: bind
+        source: ./yydocker/conf/tomcat/setenv.sh
+        target: /usr/local/tomcat/bin/setenv.sh
+      - type: bind
+        source: ./yydocker/conf/tomcat/server-sysweb.xml
+        target: /usr/local/tomcat/conf/server.xml
+      - type: bind
+        source: ./apps/sys/ROOT.war
+        target: /usr/local/tomcat/webapps/ROOT.war
+
+  syscenter:
+    #build:
+    #  context: ./yydocker/dockfiles
+    #  dockerfile: syscenter_dockfile
+    image: yyjdk:latest
+    command: /yyspace/apps/sys/bin/server_sys.sh start systemcenter
+    container_name: ${syscenter_name}
+    hostname: ${syscenter_name}
+    depends_on:
+      - srv_zookeeper
+      - db_redis
+      - db_mysql
+    environment:
+      DUBBO_PROTOCOL_PORT: ${syscenter_dubboport}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
+      REDIS_PORT: ${REDIS_PORT}
+    network_mode: host
+    extra_hosts:
+      - "${syscenter_name}:${LOCALHOST}"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /yyspace/apps
+      - type: bind
+        source: ./logs
+        target: /yyspace/logs
+    
+  
+######################################################
+### common container
+######################################################
+  db_mysql:
+    image: mysql/mysql-server:latest
+    container_name: ${MYSQL_NAME}
+    hostname: ${MYSQL_NAME}
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_LOG_CONSOLE: "false"
+    networks:
+      - znet
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - type: bind
+        source: ./yydocker/conf/my.cnf
+        target: /etc/my.cnf
+      - type: bind
+        source: ./yydocker/data/mysql/data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./yydocker/data/mysql/log
+        target: /var/log
+
+  db_redis:
+    image: redis:latest
+    container_name: ${REDIS_NAME}
+    hostname: ${REDIS_NAME}
+    command: redis-server /data/redis.conf
+    #environment:
+    #  REDIS_ENV_ITEM: 'XXX'
+    networks:
+      - znet
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - type: bind
+        source: ./yydocker/conf/redis.conf
+        target: /data/redis.conf
+      - type: bind
+        source: ./yydocker/data/redis/data
+        target: /data
+
+  srv_zookeeper:
+    image: zookeeper:latest
+    container_name: ${ZOOKEEPER_NAME}
+    hostname: ${ZOOKEEPER_NAME}
+    environment:
+      ZOO_PORT: 2181
+      ZOO_TICK_TIME: 2000
+      ZOO_INIT_LIMIT: 5
+      ZOO_SYNC_LIMIT: 2
+      ZOO_MAX_CLIENT_CNXNS: 60
+      ZOO_MY_ID: 1
+      #ZOO_SERVERS: server.1=${ZOOKEEPER_NAME}:2888:3888
+    networks:
+      - znet
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
+    volumes:
+      - type: bind
+        source: ./yydocker/data/zookeeper/data
+        target: /data
+      - type: bind
+        source: ./yydocker/data/zookeeper/datalog
+        target: /datalog
+
+  srv_nginx:
+    image: nginx:latest
+    container_name: ${NGINX_NAME}
+    hostname: ${NGINX_NAME}
+    networks:
+      - znet
+    extra_hosts:
+      - "sysweb:${LOCALHOST}"
+      - "baseweb:${LOCALHOST}"
+      - "medweb:${LOCALHOST}"
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - type: bind
+        source: ./yydocker/conf/nginx.conf
+        target: /etc/nginx/nginx.conf
+      - type: bind
+        source: ./apps/web/
+        target: /opt/nginx
+      - type: bind
+        source: ./yydocker/data/nginx/logs
+        target: /var/log/nginx
+
+
+networks:
+  znet:
