@@ -4,24 +4,24 @@
 if [[ -z $IPHARM_HOME ]] || [[ ! -x $IPHARM_HOME ]]; then IPHARM_HOME=$(cd `dirname $0`/..; pwd); fi
 
 # set JAVA_HOME and JRE_HOME
-JAVA_HOME=$IPHARM_HOME/tool/jdk1.8.0_112 && JRE_HOME=$JAVA_HOME/jre
+JAVA_HOME=$JAVA_HOME && JRE_HOME=$JAVA_HOME/jre
 
 #set properties
 case $2 in
     syscenter)
-        APP_DIR="sys" && SERVICE_NAME="systemcenter-provider"
+        APP_DIR="apps/sys" && SERVICE_NAME="systemcenter-provider"
         DUBBO_PROPERTIES_FILE="sys_center.properties"
 	;;
     base)
-        APP_DIR="base" && SERVICE_NAME="knowledge"
+        APP_DIR="apps/base" && SERVICE_NAME="knowledge"
         DUBBO_PROPERTIES_FILE="base_dubbo.properties"
 	;;
     engine)
-        APP_DIR="engine" && SERVICE_NAME="engine-provider"
+        APP_DIR="apps/engine" && SERVICE_NAME="engine-provider"
         DUBBO_PROPERTIES_FILE="engine-provider.properties"
 	;;
     gy|dp|report|upload|all)
-        APP_DIR="med" && SERVICE_NAME="med_$2"
+        APP_DIR="apps/med" && SERVICE_NAME="med_$2"
         DUBBO_PROPERTIES_FILE="${SERVICE_NAME}.properties"
 	;;
     *)
@@ -57,9 +57,9 @@ case "$1" in
         #start
         APP_OPTS="-DIPHARM_HOME=${IPHARM_HOME} -Dipharm.app.name=$2 -Dipharm.app.props=${SERVICE_NAME}"
         if [ $2 != "base" ]; then
-            $JRE_HOME/bin/java $JVM_OPTION $APP_OPTS -cp $APP_DIR/etc:$APP_WORKDIR/$SERVICE_NAME/lib/*.jar:$APP_WORKDIR/$SERVICE_NAME/$JAR_NAME com.alibaba.dubbo.container.Main 2>&1 &
+            $JRE_HOME/bin/java $JVM_OPTION $APP_OPTS -cp $APP_DIR/etc:$APP_WORKDIR/$SERVICE_NAME/lib/*.jar:$APP_WORKDIR/$SERVICE_NAME/$JAR_NAME com.alibaba.dubbo.container.Main 2>&1
         else
-            ${JRE_HOME}/bin/java -jar -DIPHARM_HOME=${IPHARM_HOME} -Detcdir=$APP_DIR/etc -Dipharm.app.name=$2 ${IPHARM_HOME}/${APP_DIR}/knowledge-dubbo-1.2.0-SNAPSHOT.jar &
+            ${JRE_HOME}/bin/java -jar -DIPHARM_HOME=${IPHARM_HOME} -Detcdir=$APP_DIR/etc -Dipharm.app.name=$2 ${IPHARM_HOME}/${APP_DIR}/knowledge-dubbo-1.2.0-SNAPSHOT.jar 2>&1
         fi
         mkdir -p ${PID_FILE%\/*}
         echo $! > $PID_FILE

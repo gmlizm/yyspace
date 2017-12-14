@@ -182,9 +182,13 @@ services:
     extra_hosts:
       - "${syscenter_name}:${LOCALHOST}"
     volumes:
-      - type: bind
-        source: ./
-        target: /yyspace/
+      - .:/yyspace
+
+      #- ./apps:/yyspace/apps
+      #- ./logs:/yyspace/logs
+      #- type: bind
+      #  source: ./bin
+      #  target: /yyspace/bin
     
   
 ######################################################
