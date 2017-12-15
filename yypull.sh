@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REMOTE_BASEDIR=/mnt/yyspace
-LOCAL_BASEDIR=/data/yyspace
+LOCAL_BASEDIR=/opt/yyspace
 
 echo "###copy tar.gz"
 
@@ -26,7 +26,7 @@ scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/soft/tomcat-base/webapps/ROOT.war $LOCAL_
 echo "====copy sys ROOT.war"
 scp yyuser1@10.1.1.186:/mnt/syscenter/apache-tomcat-7.0.69/webapps/ROOT.war $LOCAL_BASEDIR/apps/sys
 echo "====copy nginx web"
-scp -r yyuser1@10.1.1.186:/mnt/syscenter/web/systemcenter/* $LOCAL_BASEDIR/apps/web/systemcenter/
+scp -r yyuser1@10.1.1.186:/mnt/syscenter/web/systemcenter/* $LOCAL_BASEDIR/apps/web/syscenter/
 scp -r yyuser1@10.1.1.186:/mnt/homecenter/dist/* $LOCAL_BASEDIR/apps/web/homecenter/
 
 
