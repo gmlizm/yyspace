@@ -46,21 +46,24 @@ JVM_OPTION=$JVM_OPTION' -agentpath:'$IPHARM_HOME'/bin/hook/libipharmacare_hook.s
 # execute command
 case "$1" in
     start)
+        #################################################-knowledge
+        if [ $2 == "base" ]; then
+            ${JRE_HOME}/bin/java -jar -DIPHARM_HOME=${IPHARM_HOME} -Detcdir=$APP_DIR/etc -Dipharm.app.name=$2 ${APP_DIR}/knowledge-dubbo-1.2.0-SNAPSHOT.jar 2>&1; exit 0;
+        fi
+        #################################################-knowledge
+        
         if [ -z "$SERVER_PORT" ]; then echo "ERROR: CONFIG dubbo.protocol.port not define!"; exit 0; fi
         _XCOUNT=`netstat -tln | grep $SERVER_PORT | wc -l`
         if [ $_XCOUNT -gt 0 ]; then echo "ERROR: SERVICE $SERVICE_NAME on port $SERVER_PORT already used!"; exit 0; fi
         if [ ! -f $APP_DIR/ext/$TAR_NAME ]; then echo "ERROR: $APP_DIR/ext/$TAR_NAME not exists!"; exit 0; fi
-
+        
         # process tar.gz package
         rm -rf $APP_WORKDIR/$SERVICE_NAME; mkdir -p $APP_WORKDIR
         tar -C $APP_WORKDIR -xzf $APP_DIR/ext/$TAR_NAME
         #start
         APP_OPTS="-DIPHARM_HOME=${IPHARM_HOME} -Dipharm.app.name=$2 -Dipharm.app.props=${SERVICE_NAME}"
-        if [ $2 != "base" ]; then
-            $JRE_HOME/bin/java $JVM_OPTION $APP_OPTS -cp $APP_DIR/etc:$APP_WORKDIR/$SERVICE_NAME/lib/*.jar:$APP_WORKDIR/$SERVICE_NAME/$JAR_NAME com.alibaba.dubbo.container.Main 2>&1
-        else
-            ${JRE_HOME}/bin/java -jar -DIPHARM_HOME=${IPHARM_HOME} -Detcdir=$APP_DIR/etc -Dipharm.app.name=$2 ${IPHARM_HOME}/${APP_DIR}/knowledge-dubbo-1.2.0-SNAPSHOT.jar 2>&1
-        fi
+        $JRE_HOME/bin/java $JVM_OPTION $APP_OPTS -cp $APP_DIR/etc:$APP_WORKDIR/$SERVICE_NAME/lib/*.jar:$APP_WORKDIR/$SERVICE_NAME/$JAR_NAME com.alibaba.dubbo.container.Main 2>&1
+        
         mkdir -p ${PID_FILE%\/*}
         echo $! > $PID_FILE
         ;;
