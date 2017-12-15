@@ -99,7 +99,7 @@ services:
 
   baseknow:
     image: yyjdk:latest
-    command: /yyspace/apps/base/server_base.sh
+    command: /yyspace/bin/ass.sh start base
     container_name: ${baseknow_name}
     hostname: ${baseknow_name}
     depends_on:
