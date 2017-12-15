@@ -11,8 +11,8 @@ services:
     hostname: ${medweb_name}
     environment:
       DUBBO_PROTOCOL_PORT: ${medweb_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -39,8 +39,8 @@ services:
       - syscenter
     environment:
       DUBBO_PROTOCOL_PORT: ${medall_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -55,8 +55,8 @@ services:
       - baseknow
     environment:
       DUBBO_PROTOCOL_PORT: ${baseweb_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -81,8 +81,8 @@ services:
       - baseknow
     environment:
       DUBBO_PROTOCOL_PORT: ${baseengine_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -99,8 +99,8 @@ services:
       - syscenter
     environment:
       DUBBO_PROTOCOL_PORT: ${baseknow_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -118,8 +118,8 @@ services:
       - syscenter
     environment:
       DUBBO_PROTOCOL_PORT: ${sysweb_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -148,8 +148,8 @@ services:
       #- db_mysql
     environment:
       DUBBO_PROTOCOL_PORT: ${syscenter_dubboport}
-      ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${REDIS_NAME}
+      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
+      REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
       - znet
@@ -195,8 +195,8 @@ services:
     #  REDIS_ENV_ITEM: 'XXX'
     networks:
       - znet
-    #ports:
-    #  - "${REDIS_PORT}:6379"
+    ports:
+      - "${REDIS_PORT}:6379"
     volumes:
       - type: bind
         source: ./xdockers/conf/redis.conf
@@ -219,8 +219,8 @@ services:
       #ZOO_SERVERS: server.1=${ZOOKEEPER_NAME}:2888:3888
     networks:
       - znet
-    #ports:
-    #  - "${ZOOKEEPER_PORT}:2181"
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
     volumes:
       - type: bind
         source: ./xdockers/data/zookeeper/data
