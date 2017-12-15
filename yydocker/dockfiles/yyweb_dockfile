@@ -3,15 +3,14 @@
 FROM tomcat:latest
 LABEL version="1.0" author="lizm" description="dockerfile for yyweb"
 
-# define ipharmHome
-ARG IPHARM_HOME
-ENV IPHARM_HOME /yyspace
+# set env
+ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 TIMEZONE=Asia/Shanghai IPHARM_HOME=/yyspace
 
-# delete tomcat demos
-RUN rm -rf ${CATALINA_HOME}/webapps/*
-RUN mkdir -p ${IPHARM_HOME}
+# run command
+RUN rm -rf ${CATALINA_HOME}/webapps/* && mkdir -p ${IPHARM_HOME}
+RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
-# volume apps
-VOLUME ["${IPHARM_HOME}/apps", "${IPHARM_HOME}/logs"]
+# volumes
+#VOLUME ["${IPHARM_HOME}/apps", "${IPHARM_HOME}/logs"]
 
 

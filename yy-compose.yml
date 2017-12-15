@@ -3,7 +3,7 @@ version: "3.2"
 
 services:
 ######################################################
-### app container
+### service container
 ######################################################
   medweb:
     image: yytomcat:latest
@@ -19,11 +19,8 @@ services:
       - "${medweb_name}:${LOCALHOST}"
     volumes:
       - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+        source: .
+        target: /yyspace
       - type: bind
         source: ./yydocker/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
@@ -50,9 +47,7 @@ services:
     extra_hosts:
       - "${medall_name}:${LOCALHOST}"
     volumes:
-      - type: bind
-        source: ./
-        target: /yyspace/
+      - .:/yyspace
 
   baseweb:
     image: yytomcat:latest
@@ -70,11 +65,8 @@ services:
       - "${baseweb_name}:${LOCALHOST}"
     volumes:
       - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+        source: .
+        target: /yyspace
       - type: bind
         source: ./yydocker/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
@@ -102,9 +94,7 @@ services:
     extra_hosts:
       - "${baseengine_name}:${LOCALHOST}"
     volumes:
-      - type: bind
-        source: ./
-        target: /yyspace/
+      - .:/yyspace
 
 
   baseknow:
@@ -123,9 +113,7 @@ services:
     extra_hosts:
       - "${baseknow_name}:${LOCALHOST}"
     volumes:
-      - type: bind
-        source: ./
-        target: /yyspace/
+      - .:/yyspace
 
   sysweb:
     #build:
@@ -145,12 +133,7 @@ services:
     extra_hosts:
       - "${sysweb_name}:${LOCALHOST}"
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
       - type: bind
         source: ./yydocker/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
@@ -172,7 +155,7 @@ services:
     depends_on:
       - srv_zookeeper
       - db_redis
-      - db_mysql
+      #- db_mysql
     environment:
       DUBBO_PROTOCOL_PORT: ${syscenter_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
@@ -183,12 +166,9 @@ services:
       - "${syscenter_name}:${LOCALHOST}"
     volumes:
       - .:/yyspace
-
-      #- ./apps:/yyspace/apps
-      #- ./logs:/yyspace/logs
       #- type: bind
-      #  source: ./bin
-      #  target: /yyspace/bin
+      #  source: .
+      #  target: /yyspace
     
   
 ######################################################

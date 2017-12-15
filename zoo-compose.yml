@@ -19,9 +19,7 @@ services:
     ports:
       - "${medweb_httpport}:8080"
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
+      - .:/yyspace
       - type: bind
         source: ./logs
         target: /yyspace/logs
@@ -47,12 +45,7 @@ services:
     networks:
       - znet
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
 
   baseweb:
     image: yytomcat:latest
@@ -70,12 +63,7 @@ services:
     ports:
       - "${baseweb_httpport}:8080"
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
       - type: bind
         source: ./yydocker/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
@@ -99,12 +87,7 @@ services:
     networks:
       - znet
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
 
 
   baseknow:
@@ -122,12 +105,7 @@ services:
     networks:
       - znet
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
 
   sysweb:
     #build:
@@ -148,12 +126,7 @@ services:
     ports:
       - "${sysweb_httpport}:8080"
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
       - type: bind
         source: ./yydocker/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
@@ -172,7 +145,7 @@ services:
     depends_on:
       - srv_zookeeper
       - db_redis
-      - db_mysql
+      #- db_mysql
     environment:
       DUBBO_PROTOCOL_PORT: ${syscenter_dubboport}
       ZK_SERVER: ${ZOOKEEPER_NAME}:${ZOOKEEPER_PORT}
@@ -181,12 +154,10 @@ services:
     networks:
       - znet
     volumes:
-      - type: bind
-        source: ./apps
-        target: /yyspace/apps
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
+      - .:/yyspace
+      #- type: bind
+      #  source: .
+      #  target: /yyspace
     
   
 ######################################################
