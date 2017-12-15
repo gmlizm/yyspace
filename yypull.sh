@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REMOTE_BASEDIR=/mnt/yyspace
-LOCAL_BASEDIR=/opt/yyspace
+LOCAL_BASEDIR=/data/yyspace
 
 echo "###copy tar.gz"
 
@@ -12,9 +12,11 @@ scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/base/knowledge-dubbo-1.2.0-SNAPSHOT.
 echo "====copy systemcenter-provider-1.0-SNAPSHOT.tar.gz"
 scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/sys/ext/systemcenter-provider-1.0-SNAPSHOT.tar.gz $LOCAL_BASEDIR/apps/sys/ext
 
-echo "====copy engine-yb-provider-1.2.0-SNAPSHOT.jar"
-scp yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/engine-yb-provider-1.2.0-SNAPSHOT.jar $LOCAL_BASEDIR/apps/engine
-scp -r yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/lib $LOCAL_BASEDIR/apps/engine
+echo "====copy engine-provider-1.2.0.tar.gz"
+scp root@10.1.1.134:/$REMOTE_BASEDIR/engine/ext/engine-provider* $LOCAL_BASEDIR/apps/engine/ext
+
+#scp yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/engine-yb-provider-1.2.0-SNAPSHOT.jar $LOCAL_BASEDIR/apps/engine
+#scp -r yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/lib $LOCAL_BASEDIR/apps/engine
 
 echo "====copy med_all-3.4-SNAPSHOT.tar.gz"
 scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/med/ext/med_all-3.4-SNAPSHOT.tar.gz $LOCAL_BASEDIR/apps/med/ext
