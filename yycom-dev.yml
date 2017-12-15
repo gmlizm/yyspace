@@ -22,10 +22,10 @@ services:
         source: .
         target: /yyspace
       - type: bind
-        source: ./yydocker/conf/tomcat/setenv.sh
+        source: ./xdockers/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
       - type: bind
-        source: ./yydocker/conf/tomcat/server-medweb.xml
+        source: ./xdockers/conf/tomcat/server-medweb.xml
         target: /usr/local/tomcat/conf/server.xml
       - type: bind
         source: ./apps/med/med.war
@@ -68,10 +68,10 @@ services:
         source: .
         target: /yyspace
       - type: bind
-        source: ./yydocker/conf/tomcat/setenv.sh
+        source: ./xdockers/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
       - type: bind
-        source: ./yydocker/conf/tomcat/server-baseweb.xml
+        source: ./xdockers/conf/tomcat/server-baseweb.xml
         target: /usr/local/tomcat/conf/server.xml
       - type: bind
         source: ./apps/base/ROOT.war
@@ -117,7 +117,7 @@ services:
 
   sysweb:
     #build:
-    #  context: ./yydocker/dockfiles
+    #  context: ./xdockers/dockfiles
     #  dockerfile: yyweb_dockfile
     image: yytomcat:latest
     container_name: ${sysweb_name}
@@ -135,10 +135,10 @@ services:
     volumes:
       - .:/yyspace
       - type: bind
-        source: ./yydocker/conf/tomcat/setenv.sh
+        source: ./xdockers/conf/tomcat/setenv.sh
         target: /usr/local/tomcat/bin/setenv.sh
       - type: bind
-        source: ./yydocker/conf/tomcat/server-sysweb.xml
+        source: ./xdockers/conf/tomcat/server-sysweb.xml
         target: /usr/local/tomcat/conf/server.xml
       - type: bind
         source: ./apps/sys/ROOT.war
@@ -146,7 +146,7 @@ services:
 
   syscenter:
     #build:
-    #  context: ./yydocker/dockfiles
+    #  context: ./xdockers/dockfiles
     #  dockerfile: syscenter_dockfile
     image: yyjdk:latest
     command: /yyspace/bin/ass.sh start syscenter
@@ -188,13 +188,13 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - type: bind
-        source: ./yydocker/conf/my.cnf
+        source: ./xdockers/conf/my.cnf
         target: /etc/my.cnf
       - type: bind
-        source: ./yydocker/data/mysql/data
+        source: ./xdockers/data/mysql/data
         target: /var/lib/mysql
       - type: bind
-        source: ./yydocker/data/mysql/log
+        source: ./xdockers/data/mysql/log
         target: /var/log
 
   db_redis:
@@ -210,10 +210,10 @@ services:
       - "${REDIS_PORT}:6379"
     volumes:
       - type: bind
-        source: ./yydocker/conf/redis.conf
+        source: ./xdockers/conf/redis.conf
         target: /data/redis.conf
       - type: bind
-        source: ./yydocker/data/redis/data
+        source: ./xdockers/data/redis/data
         target: /data
 
   srv_zookeeper:
@@ -234,10 +234,10 @@ services:
       - "${ZOOKEEPER_PORT}:2181"
     volumes:
       - type: bind
-        source: ./yydocker/data/zookeeper/data
+        source: ./xdockers/data/zookeeper/data
         target: /data
       - type: bind
-        source: ./yydocker/data/zookeeper/datalog
+        source: ./xdockers/data/zookeeper/datalog
         target: /datalog
 
   srv_nginx:
@@ -254,13 +254,13 @@ services:
       - "${NGINX_PORT}:80"
     volumes:
       - type: bind
-        source: ./yydocker/conf/nginx.conf
+        source: ./xdockers/conf/nginx.conf
         target: /etc/nginx/nginx.conf
       - type: bind
         source: ./apps/web/
         target: /opt/nginx
       - type: bind
-        source: ./yydocker/data/nginx/logs
+        source: ./xdockers/data/nginx/logs
         target: /var/log/nginx
 
 
