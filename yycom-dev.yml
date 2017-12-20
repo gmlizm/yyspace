@@ -77,7 +77,7 @@ services:
         source: ./apps/base/ROOT.war
         target: /usr/local/tomcat/webapps/ROOT.war
 
-  baseengine:
+  engine:
     image: yyjdk:latest
     command: /yyspace/bin/ass.sh start engine
     container_name: ${baseengine_name}
@@ -97,9 +97,9 @@ services:
       - .:/yyspace
 
 
-  baseknow:
+  knowledge:
     image: yyjdk:latest
-    command: /yyspace/bin/ass.sh start base
+    command: /yyspace/bin/ass.sh start knowledge
     container_name: ${baseknow_name}
     hostname: ${baseknow_name}
     depends_on:

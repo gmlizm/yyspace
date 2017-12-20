@@ -12,8 +12,8 @@ case $2 in
         APP_DIR="apps/sys" && SERVICE_NAME="systemcenter-provider"
         DUBBO_PROPERTIES_FILE="sys_center.properties"
 	;;
-    base)
-        APP_DIR="apps/base" && SERVICE_NAME="knowledge"
+    knowledge)
+        APP_DIR="apps/knowledge" && SERVICE_NAME="knowledge"
         DUBBO_PROPERTIES_FILE="base_dubbo.properties"
 	;;
     engine)
