@@ -1,35 +1,36 @@
 #!/bin/bash
 
+REMOTE_HOST=10.1.1.186
 REMOTE_BASEDIR=/mnt/yyspace
-LOCAL_BASEDIR=/data/yyspace
+LOCAL_BASEDIR=/data/yyspace-
 
-echo "###copy tar.gz"
 
-echo "==copy to 10.1.1.91"
-echo "====copy knowledge-dubbo-1.2.0-SNAPSHOT.jar"
-scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/base/knowledge-dubbo-1.2.0-SNAPSHOT.jar $LOCAL_BASEDIR/apps/base
+echo "### START!"
 
-echo "====copy systemcenter-provider-1.0-SNAPSHOT.tar.gz"
-scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/sys/ext/systemcenter-provider-1.0-SNAPSHOT.tar.gz $LOCAL_BASEDIR/apps/sys/ext
+echo "====copy knowledge*.tar.gz"
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/knowledge/ext/knowledge*.tar.gz $LOCAL_BASEDIR/knowledge/ext
 
-echo "====copy engine-provider-1.2.0.tar.gz"
-scp root@10.1.1.134:/$REMOTE_BASEDIR/engine/ext/engine-provider* $LOCAL_BASEDIR/apps/engine/ext
+echo "====copy systemcenter*.tar.gz"
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/sys/ext/systemcenter*.tar.gz $LOCAL_BASEDIR/apps/sys/ext
 
-#scp yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/engine-yb-provider-1.2.0-SNAPSHOT.jar $LOCAL_BASEDIR/apps/engine
-#scp -r yyuser1@10.1.1.186:/mnt/knowledge/engine_dubbo/lib $LOCAL_BASEDIR/apps/engine
+echo "====copy engine*.tar.gz"
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/engine/ext/engine*.tar.gz $LOCAL_BASEDIR/apps/engine/ext
 
-echo "====copy med_all-3.4-SNAPSHOT.tar.gz"
-scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/apps/med/ext/med_all-3.4-SNAPSHOT.tar.gz $LOCAL_BASEDIR/apps/med/ext
+echo "====copy med_all*.tar.gz"
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/med/ext/med_all*.tar.gz $LOCAL_BASEDIR/apps/med/ext
 
 echo "====copy med.war"
-scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/soft/tomcat-med/webapps/med.war $LOCAL_BASEDIR/apps/med
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/soft/tomcat-med/webapps/med.war $LOCAL_BASEDIR/apps/med
+
 echo "====copy knowledge ROOT.war"
-scp yyuser1@10.1.1.186:$REMOTE_BASEDIR/soft/tomcat-base/webapps/ROOT.war $LOCAL_BASEDIR/apps/base
+scp yyuser1@${REMOTE_HOST}:$REMOTE_BASEDIR/soft/tomcat-base/webapps/ROOT.war $LOCAL_BASEDIR/apps/base
+
 echo "====copy sys ROOT.war"
-scp yyuser1@10.1.1.186:/mnt/syscenter/apache-tomcat-7.0.69/webapps/ROOT.war $LOCAL_BASEDIR/apps/sys
+scp yyuser1@${REMOTE_HOST}:/mnt/syscenter/apache-tomcat-7.0.69/webapps/ROOT.war $LOCAL_BASEDIR/apps/sys
+
 echo "====copy nginx web"
-scp -r yyuser1@10.1.1.186:/mnt/syscenter/web/systemcenter/* $LOCAL_BASEDIR/apps/web/syscenter/
-scp -r yyuser1@10.1.1.186:/mnt/homecenter/dist/* $LOCAL_BASEDIR/apps/web/homecenter/
+scp -r yyuser1@${REMOTE_HOST}:/mnt/syscenter/web/systemcenter/* $LOCAL_BASEDIR/apps/web/syscenter/
+scp -r yyuser1@${REMOTE_HOST}:/mnt/homecenter/dist/* $LOCAL_BASEDIR/apps/web/homecenter/
 
 
 echo "### END!"
