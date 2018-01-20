@@ -5,30 +5,25 @@ services:
 ######################################################
 ### app container
 ######################################################
-  medweb:
+  tomcat:
     image: yytomcat:latest
-    container_name: ${medweb_name}
-    hostname: ${medweb_name}
+    container_name: ${tomcat_name}
+    hostname: ${tomcat_name}
     environment:
-      DUBBO_PROTOCOL_PORT: ${medweb_dubboport}
+      DUBBO_PORT_syscenter: ${syscenter_dubboport}
+      DUBBO_PORT_knowledge: ${knowledge_dubboport}
+      DUBBO_PORT_med: ${med_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
       REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
-      - znet
+      - yynet
     ports:
-      - "${medweb_httpport}:8080"
+      - "${tomcat_httpport}:8080"
     volumes:
       - .:/yyspace
-      - type: bind
-        source: ./logs
-        target: /yyspace/logs
-      - type: bind
-        source: ./xdockers/conf/tomcat/setenv.sh
-        target: /usr/local/tomcat/bin/setenv.sh
-      - type: bind
-        source: ./apps/med/med.war
-        target: /usr/local/tomcat/webapps/med.war
+      - ./xdockers/conf/tomcat/setenv.sh:/usr/local/tomcat/bin/setenv.sh
+      - ./apps/webapps/:/usr/local/tomcat/webapps/
 
   medall:
     image: yyjdk:latest
@@ -38,54 +33,30 @@ services:
     depends_on:
       - syscenter
     environment:
-      DUBBO_PROTOCOL_PORT: ${medall_dubboport}
+      DUBBO_PORT: ${medall_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
       REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
-      - znet
+      - yynet
     volumes:
       - .:/yyspace
-
-  baseweb:
-    image: yytomcat:latest
-    container_name: ${baseweb_name}
-    hostname: ${baseweb_name}
-    depends_on:
-      - baseknow
-    environment:
-      DUBBO_PROTOCOL_PORT: ${baseweb_dubboport}
-      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${LOCALHOST}
-      REDIS_PORT: ${REDIS_PORT}
-    networks:
-      - znet
-    ports:
-      - "${baseweb_httpport}:8080"
-    volumes:
-      - .:/yyspace
-      - type: bind
-        source: ./xdockers/conf/tomcat/setenv.sh
-        target: /usr/local/tomcat/bin/setenv.sh
-      - type: bind
-        source: ./apps/base/ROOT.war
-        target: /usr/local/tomcat/webapps/ROOT.war
 
   engine:
     image: yyjdk:latest
     command: /yyspace/apps/engine/start.sh
-    container_name: ${baseengine_name}
-    hostname: ${baseengine_name}
+    container_name: ${engine_name}
+    hostname: ${engine_name}
     depends_on:
       - syscenter
-      - baseknow
+      - knowledge
     environment:
-      DUBBO_PROTOCOL_PORT: ${baseengine_dubboport}
+      DUBBO_PORT: ${engine_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
       REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
-      - znet
+      - yynet
     volumes:
       - .:/yyspace
 
@@ -93,46 +64,19 @@ services:
   knowledge:
     image: yyjdk:latest
     command: /yyspace/bin/ass.sh start knowledge
-    container_name: ${baseknow_name}
-    hostname: ${baseknow_name}
+    container_name: ${knowledge_name}
+    hostname: ${knowledge_name}
     depends_on:
       - syscenter
     environment:
-      DUBBO_PROTOCOL_PORT: ${baseknow_dubboport}
+      DUBBO_PORT: ${knowledge_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
       REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
-      - znet
+      - yynet
     volumes:
       - .:/yyspace
-
-  sysweb:
-    #build:
-    #  context: ./xdockers/dockfiles
-    #  dockerfile: yyweb_dockfile
-    image: yytomcat:latest
-    container_name: ${sysweb_name}
-    hostname: ${sysweb_name}
-    depends_on:
-      - syscenter
-    environment:
-      DUBBO_PROTOCOL_PORT: ${sysweb_dubboport}
-      ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
-      REDIS_HOST: ${LOCALHOST}
-      REDIS_PORT: ${REDIS_PORT}
-    networks:
-      - znet
-    ports:
-      - "${sysweb_httpport}:8080"
-    volumes:
-      - .:/yyspace
-      - type: bind
-        source: ./xdockers/conf/tomcat/setenv.sh
-        target: /usr/local/tomcat/bin/setenv.sh
-      - type: bind
-        source: ./apps/sys/ROOT.war
-        target: /usr/local/tomcat/webapps/ROOT.war
 
   syscenter:
     #build:
@@ -147,12 +91,12 @@ services:
       - db_redis
       #- db_mysql
     environment:
-      DUBBO_PROTOCOL_PORT: ${syscenter_dubboport}
+      DUBBO_PORT: ${syscenter_dubboport}
       ZK_SERVER: ${LOCALHOST}:${ZOOKEEPER_PORT}
       REDIS_HOST: ${LOCALHOST}
       REDIS_PORT: ${REDIS_PORT}
     networks:
-      - znet
+      - yynet
     volumes:
       - .:/yyspace
       #- type: bind
@@ -172,7 +116,7 @@ services:
       MYSQL_ROOT_HOST: "%"
       MYSQL_LOG_CONSOLE: "false"
     networks:
-      - znet
+      - yynet
     ports:
       - "${MYSQL_PORT}:3306"
     volumes:
@@ -194,7 +138,7 @@ services:
     #environment:
     #  REDIS_ENV_ITEM: 'XXX'
     networks:
-      - znet
+      - yynet
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -218,7 +162,7 @@ services:
       ZOO_MY_ID: 1
       #ZOO_SERVERS: server.1=${ZOOKEEPER_NAME}:2888:3888
     networks:
-      - znet
+      - yynet
     ports:
       - "${ZOOKEEPER_PORT}:2181"
     volumes:
@@ -234,11 +178,9 @@ services:
     container_name: ${NGINX_NAME}
     hostname: ${NGINX_NAME}
     networks:
-      - znet
+      - yynet
     links:
-      - sysweb:sysweb
-      - baseweb:baseweb
-      - medweb:medweb
+      - xserver:tomcat
     ports:
       - "${NGINX_PORT}:80"
     volumes:
@@ -254,4 +196,4 @@ services:
 
 
 networks:
-  znet:
+  yynet:
