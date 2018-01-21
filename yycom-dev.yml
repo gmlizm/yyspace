@@ -22,12 +22,12 @@ services:
     volumes:
       - .:/yyspace
       - ./xdockers/conf/tomcat/setenv.sh:/usr/local/tomcat/bin/setenv.sh
-      - ./xdockers/conf/tomcat/server.xml:/usr/local/tomcat/conf/server.xml
+#      - ./xdockers/conf/tomcat/server.xml:/usr/local/tomcat/conf/server.xml
       - ./apps/webapps/:/usr/local/tomcat/webapps/
 
   medall:
     image: yyjdk:latest
-    command: /yyspace/bin/ass.sh start all
+    command: /yyspace/bin/iss.sh start all
     container_name: ${medall_name}
     hostname: ${medall_name}
     depends_on:
@@ -45,7 +45,7 @@ services:
 
   engine:
     image: yyjdk:latest
-    command: /yyspace/bin/ass.sh start engine
+    command: /yyspace/bin/iss.sh start engine
     container_name: ${engine_name}
     hostname: ${engine_name}
     depends_on:
@@ -64,7 +64,7 @@ services:
 
   knowledge:
     image: yyjdk:latest
-    command: /yyspace/bin/ass.sh start knowledge
+    command: /yyspace/bin/iss.sh start knowledge
     container_name: ${knowledge_name}
     hostname: ${knowledge_name}
     depends_on:
@@ -85,7 +85,7 @@ services:
     #  context: ./xdockers/dockfiles
     #  dockerfile: syscenter_dockfile
     image: yyjdk:latest
-    command: /yyspace/bin/ass.sh start syscenter
+    command: /yyspace/bin/iss.sh start syscenter
     container_name: ${syscenter_name}
     hostname: ${syscenter_name}
     depends_on:
@@ -190,8 +190,8 @@ services:
         source: ./xdockers/conf/nginx.conf
         target: /etc/nginx/nginx.conf
       - type: bind
-        source: ./apps/web/
-        target: /opt/nginx
+        source: ./apps/web
+        target: /opt/nginx/web
       - type: bind
         source: ./xdockers/data/nginx/logs
         target: /var/log/nginx

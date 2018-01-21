@@ -21,10 +21,10 @@ echo "====copy med_all*.tar.gz"
 scp $REMOTE_USER@${REMOTE_HOST}:$REMOTE_BASEDIR/med/ext/med_all*.tar.gz $LOCAL_BASEDIR/apps/med/ext
 
 echo "====copy wars"
-scp -r $REMOTE_USER@${REMOTE_HOST}:$REMOTE_BASEDIR/soft/tomcat-all/webapps $LOCAL_BASEDIR/apps/webapps
+scp -r $REMOTE_USER@${REMOTE_HOST}:$REMOTE_BASEDIR/soft/tomcat-all/webapps/* $LOCAL_BASEDIR/apps/webapps
 
 echo "====copy nginx web"
-scp -r $REMOTE_USER@${REMOTE_HOST}:$REMOTE_BASEDIR/apps/web/ $LOCAL_BASEDIR/apps/web/
+scp -r $REMOTE_USER@${REMOTE_HOST}:$REMOTE_BASEDIR/web/* $LOCAL_BASEDIR/apps/web/
 
 
 echo "### END!"
